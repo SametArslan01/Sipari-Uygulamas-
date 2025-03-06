@@ -148,7 +148,7 @@ class _AnasayfaState extends State<Anasayfa> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         shape: CircleBorder(),
-        child: Icon(Icons.shopping_cart,color: Colors.white,),
+        child: Icon(Icons.shopping_cart,color: Colors.white,size: 30,),
         backgroundColor: Colors.indigo,
       ),
       bottomNavigationBar: BottomNavigationBar(
