@@ -4,6 +4,8 @@ import 'package:siparis_uygulamasi/entity/yemekler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:siparis_uygulamasi/sepet_sayfasi.dart';
+
 class Anasayfa extends StatefulWidget {
   const Anasayfa({super.key});
 
@@ -29,17 +31,17 @@ class _AnasayfaState extends State<Anasayfa> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(80),
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.indigo,
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30),
             ),
           ),
-          padding: EdgeInsets.only(left: 20,right: 20,top: 30),
-          child: Row(
+          padding: const EdgeInsets.only(left: 20,right: 20,top: 30),
+          child: const Row(
             children: [
               Text(
                 "Merhaba",
@@ -146,19 +148,21 @@ class _AnasayfaState extends State<Anasayfa> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        shape: CircleBorder(),
-        child: Icon(Icons.shopping_cart,color: Colors.white,size: 30,),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => const SepetSayfasi()));
+        },
+        shape: const CircleBorder(),
         backgroundColor: Colors.indigo,
+        child: const Icon(Icons.shopping_cart,color: Colors.white,size: 30,),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(icon: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
+          const BottomNavigationBarItem(icon: Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
             child: Icon(Icons.home,color: Colors.indigo,),
           ), label: "Anasayfa"),
-          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoriler"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
+          const BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoriler"),
+          const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
     );
@@ -180,18 +184,25 @@ Future<List<Yemekler>> yemekListesiGetir() async{
     throw Exception('Yemekl listesi getirilemedi: ${response.statusCode}');
   }
 }
-Future<void> sepeteYemekEkle(int yemek_id,String yemek_adi,String yemek_resim_adi,int yemek_fiyat,int yemek_siparis_adet,) async{
-  final sepetYemek = SepetYemekler(sepet_yemek_id: yemek_id, yemek_adi: yemek_adi, yemek_resim_adi: yemek_resim_adi, yemek_fiyat: yemek_fiyat,yemek_siparis_adet:yemek_siparis_adet, kullanici_adi: 'samet');
-  final response = await http.post(Uri.parse("http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php"),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-  body: jsonEncode(sepetYemek.toJson())
+Future<void> sepeteYemekEkle(int yemek_id, String yemek_adi, String yemek_resim_adi, int yemek_fiyat, int yemek_siparis_adet) async {
+  var url = Uri.parse("http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php");
+
+  var response = await http.post(url,
+    headers: <String, String>{
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: {
+      'yemek_adi': yemek_adi,
+      'yemek_resim_adi': yemek_resim_adi,
+      'yemek_fiyat': yemek_fiyat.toString(),
+      'yemek_siparis_adet': yemek_siparis_adet.toString(),
+      'kullanici_adi': 'samet',  // Kullanıcı adını buraya yazabilirsiniz
+    },
   );
+
   if (response.statusCode == 200) {
     print('Sepete ekleme başarılı: ${response.body}');
   } else {
-    // Kayıt başarısız
-    print('Sepete ekleme başarısız: ${response.statusCode},${response.body}');
+    print('Sepete ekleme başarısız: ${response.statusCode}, ${response.body}');
   }
 }

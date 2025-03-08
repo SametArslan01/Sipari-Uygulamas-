@@ -29,12 +29,11 @@ class SepetYemekler{
   // Nesneden JSON'a dönüştürme
   Map<String, dynamic> toJson() {
     return {
-      'sepet_yemek_id': sepet_yemek_id,
       'yemek_adi': yemek_adi,
       'yemek_resim_adi': yemek_resim_adi,
-      'yemek_fiyat': yemek_fiyat,
-      'yemek_siparis_adet': yemek_siparis_adet,
-      'kullanici_adi': kullanici_adi,
+      'yemek_fiyat': yemek_fiyat.toString(),
+      'yemek_siparis_adet': yemek_siparis_adet.toString(),
+      'kullanici_adi': "samet",
     };
   }
 
