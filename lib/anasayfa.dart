@@ -156,13 +156,13 @@ class _AnasayfaState extends State<Anasayfa> {
         child: const Icon(Icons.shopping_cart,color: Colors.white,size: 30,),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          const BottomNavigationBarItem(icon: Padding(
+        items: const [
+          BottomNavigationBarItem(icon: Padding(
             padding: EdgeInsets.only(bottom: 8.0),
             child: Icon(Icons.home,color: Colors.indigo,),
           ), label: "Anasayfa"),
-          const BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoriler"),
-          const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "Favoriler"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
     );
@@ -185,19 +185,15 @@ Future<List<Yemekler>> yemekListesiGetir() async{
   }
 }
 Future<void> sepeteYemekEkle(int yemek_id, String yemek_adi, String yemek_resim_adi, int yemek_fiyat, int yemek_siparis_adet) async {
+ final sepetYemek = SepetYemekler(sepet_yemek_id: yemek_id, yemek_adi: yemek_adi, yemek_resim_adi: yemek_resim_adi, yemek_fiyat: yemek_fiyat, yemek_siparis_adet: yemek_siparis_adet, kullanici_adi: "samet");
   var url = Uri.parse("http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php");
 
+  var value=jsonEncode(sepetYemek.toJson());
   var response = await http.post(url,
     headers: <String, String>{
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: {
-      'yemek_adi': yemek_adi,
-      'yemek_resim_adi': yemek_resim_adi,
-      'yemek_fiyat': yemek_fiyat.toString(),
-      'yemek_siparis_adet': yemek_siparis_adet.toString(),
-      'kullanici_adi': 'samet',  // Kullanıcı adını buraya yazabilirsiniz
-    },
+    body: sepetYemek.toJson(),
   );
 
   if (response.statusCode == 200) {

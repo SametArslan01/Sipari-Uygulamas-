@@ -17,6 +17,7 @@ class _SepetSayfasiState extends State<SepetSayfasi> {
 
   late Future<List<SepetYemekler>> sepetYemeklerFuture;
   double toplamYemekFiyat = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -43,10 +44,10 @@ class _SepetSayfasiState extends State<SepetSayfasi> {
           builder: (context , snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){
             return const Center(child:CircularProgressIndicator());
+            }else if(!snapshot.hasData || snapshot.data!.isEmpty){
+              return const Center(child: Text("Lütfen Sepete Ürün Ekleyiniz!"));
             }else if(snapshot.hasError){
               return Center(child: Text('Hata oluştu: ${snapshot.error}')); //Hata oluştu:
-            }else if(!snapshot.hasData || snapshot.data!.isEmpty){
-              return const Center(child: Text("Yemekler bulunamadı"));
             }else{
               List<SepetYemekler> sepetYemekler = snapshot.data!;
               WidgetsBinding.instance.addPostFrameCallback((_) { //ile toplam fiyatı güvenli bir şekilde güncellenmesini sağladık.Doğrudan setState yapınca sonsuz döngüye girebilir.
@@ -103,7 +104,7 @@ class _SepetSayfasiState extends State<SepetSayfasi> {
               );
             }
           }),
-      bottomSheet: Container(height: 175,color: Colors.white,
+      bottomSheet: Container(height: 157,color: Colors.white,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 5.0,left: 20,right: 20,top: 5.0),
             child: Column(
@@ -142,8 +143,6 @@ Future<List<SepetYemekler>> sepettekiYemekleriGetir() async{
   },
   );
   if (response.statusCode == 200) {
-    print('Sepet API Yanıtı: ${response.statusCode}');
-    print('Sepet API Yanıtı: ${response.body}');
     var cevap = jsonDecode(response.body);
     // Gelen yemek verisini işleyebilirsin
     List<SepetYemekler> sepettekiYemekler =[];
