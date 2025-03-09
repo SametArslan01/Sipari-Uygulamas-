@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siparis_uygulamasi/entity/sepet_yemekler.dart';
+import 'package:siparis_uygulamasi/detay_sayfasi.dart';
 import 'package:siparis_uygulamasi/entity/yemekler.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -78,10 +78,10 @@ class _AnasayfaState extends State<Anasayfa> {
               builder: (context, snapshot){
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Hata oluştu: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Center(child: Text("Yemekler bulunamadı"));
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Hata oluştu: ${snapshot.error}'));
                 }else{
                   List<Yemekler> yemekler = snapshot.data!;
                   return GridView.builder(
@@ -98,7 +98,9 @@ class _AnasayfaState extends State<Anasayfa> {
                         elevation: 10,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                         child: InkWell(
-                          onTap: (){},
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => DetaySayfasi(sepeteEklenecekYemek: yemek,)));
+                          },
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -128,10 +130,8 @@ class _AnasayfaState extends State<Anasayfa> {
                                   const Icon(Icons.currency_lira,size: 25,),
                                   Text(yemek.yemek_fiyat.toString(),style: const TextStyle(fontSize: 25,fontWeight: FontWeight.bold),),
                                   const Spacer(),
-                                  IconButton(
-                                      onPressed: (){
-                                    sepeteYemekEkle(yemek.yemek_id, yemek.yemek_adi, yemek.yemek_resim_adi, yemek.yemek_fiyat,1);
-                                  }, icon: const Icon(Icons.add_box,size: 40,))
+                                  const Icon(Icons.add_box,size: 40,),
+                                  SizedBox(width: 5,),
                                 ],
                               ),
                             ],
@@ -184,21 +184,4 @@ Future<List<Yemekler>> yemekListesiGetir() async{
     throw Exception('Yemekl listesi getirilemedi: ${response.statusCode}');
   }
 }
-Future<void> sepeteYemekEkle(int yemek_id, String yemek_adi, String yemek_resim_adi, int yemek_fiyat, int yemek_siparis_adet) async {
- final sepetYemek = SepetYemekler(sepet_yemek_id: yemek_id, yemek_adi: yemek_adi, yemek_resim_adi: yemek_resim_adi, yemek_fiyat: yemek_fiyat, yemek_siparis_adet: yemek_siparis_adet, kullanici_adi: "samet");
-  var url = Uri.parse("http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php");
 
-  var value=jsonEncode(sepetYemek.toJson());
-  var response = await http.post(url,
-    headers: <String, String>{
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: sepetYemek.toJson(),
-  );
-
-  if (response.statusCode == 200) {
-    print('Sepete ekleme başarılı: ${response.body}');
-  } else {
-    print('Sepete ekleme başarısız: ${response.statusCode}, ${response.body}');
-  }
-}

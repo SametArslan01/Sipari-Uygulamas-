@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:siparis_uygulamasi/sepet_sayfasi.dart';
-
 import 'anasayfa.dart';
 
 void main() {
@@ -20,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const SepetSayfasi(),
+      home: const Anasayfa(),
     );
   }
 }
