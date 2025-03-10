@@ -136,20 +136,36 @@ class _SepetSayfasiState extends State<SepetSayfasi> {
     );
   }
 }
-Future<List<SepetYemekler>> sepettekiYemekleriGetir() async{
-  final response = await http.post(Uri.parse("http://kasimadalan.pe.hu/yemekler/sepettekiYemekleriGetir.php"),
-  body: {
-    "kullanici_adi" : "samet",
-  },
+Future<List<SepetYemekler>> sepettekiYemekleriGetir() async {
+  final response = await http.post(
+    Uri.parse("http://kasimadalan.pe.hu/yemekler/sepettekiYemekleriGetir.php"),
+    body: {
+      "kullanici_adi": "samet",
+    },
   );
+
   if (response.statusCode == 200) {
     var cevap = jsonDecode(response.body);
-    // Gelen yemek verisini işleyebilirsin
-    List<SepetYemekler> sepettekiYemekler =[];
-    for(var item in cevap["sepet_yemekler"]){
-      sepettekiYemekler.add(SepetYemekler.fromJson(item));
+    List<SepetYemekler> yemekler = [];
+
+    if (cevap["sepet_yemekler"] != null) {
+      Map<String, SepetYemekler> yemekMap = {};
+
+      for (var item in cevap["sepet_yemekler"]) {
+        SepetYemekler yemek = SepetYemekler.fromJson(item);
+
+        if (yemekMap.containsKey(yemek.yemek_adi)) {
+          // Aynı yemek isminden varsa, adet ve toplam fiyatı artır
+          yemekMap[yemek.yemek_adi]!.yemek_siparis_adet += yemek.yemek_siparis_adet;
+        } else {
+          // Yeni yemek ekle
+          yemekMap[yemek.yemek_adi] = yemek;
+        }
+      }
+      yemekler = yemekMap.values.toList();
     }
-    return sepettekiYemekler;
+
+    return yemekler;
   } else {
     throw Exception('Sepetteki Yemekler listesi getirilemedi: ${response.statusCode}');
   }

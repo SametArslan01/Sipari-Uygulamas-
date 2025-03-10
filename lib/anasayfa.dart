@@ -16,6 +16,9 @@ class Anasayfa extends StatefulWidget {
 class _AnasayfaState extends State<Anasayfa> {
   late Future<List<Yemekler>> yemeklerFuture;
   int yemekSiparisAdeti = 0;
+  var tfAramaKelimesi = TextEditingController();
+  String aramaQuery = "";
+  var iconButton = IconButton(onPressed: (){}, icon: const Icon(Icons.search_rounded,color: Colors.grey,));
 
 
 
@@ -65,11 +68,24 @@ class _AnasayfaState extends State<Anasayfa> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
+              controller: tfAramaKelimesi,
               decoration: InputDecoration(
                 hintText: "Ara",
                 enabledBorder: const OutlineInputBorder(borderSide: BorderSide(width: 3,color: Colors.grey)),
-                suffixIcon: IconButton(onPressed: (){}, icon: const Icon(Icons.search_rounded,color: Colors.grey,))
+                suffixIcon: iconButton,
               ),
+              onChanged: (value){
+                setState(() {
+                  aramaQuery = value.toLowerCase();
+                  iconButton = IconButton(onPressed: (){
+                    setState(() {
+                      tfAramaKelimesi.clear();
+                      aramaQuery = "";
+                      iconButton = IconButton(onPressed: (){}, icon: const Icon(Icons.search_rounded,color: Colors.grey,));
+                    });
+                  }, icon: const Icon(Icons.close,color: Colors.grey,));
+                });
+              },
             ),
           ),
           Expanded(
@@ -83,7 +99,7 @@ class _AnasayfaState extends State<Anasayfa> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Hata oluştu: ${snapshot.error}'));
                 }else{
-                  List<Yemekler> yemekler = snapshot.data!;
+                  List<Yemekler> yemekler = snapshot.data!.where((yemek) => yemek.yemek_adi.toLowerCase().contains(aramaQuery)).toList();
                   return GridView.builder(
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
@@ -168,6 +184,7 @@ class _AnasayfaState extends State<Anasayfa> {
     );
   }
 }
+
 Future<List<Yemekler>> yemekListesiGetir() async{
   final response = await http.get(Uri.parse("http://kasimadalan.pe.hu/yemekler/tumYemekleriGetir.php"),
   headers: <String, String>{
