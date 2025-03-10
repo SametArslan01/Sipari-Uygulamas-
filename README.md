@@ -1,16 +1,10 @@
-# siparis_uygulamasi
+# Sipariş Uygulaması
+## Udemy Kurs Bitirme Projesi
+Udemy üzerinden aldığım flutter dart kursu için yazmış olduğum bir uygulamadır.Hazır veritabanı üzerinde çalıştım.
+Dersleri güzel ve anlaşılır bir yapıda.Çok beğenerek ve anlayarak izledim.Dersin hocası Kasım Adalan'a teşekkür ederim.
+3 temel sayfadan oluşan, basit bir arayüzü bulunan günümüz sipariş uygulamalarına benzeyecek şekilde yapılmıştır.
+### Anasayfa tüm yemeklerin listelendiği sayfadır.
+### Detay Sayfası sepete ürün eklediğimiz sayfadır.
+### Sepet Sayfası sepete eklenen ürünleri gördüğümüz sayfadır.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[Kasım Adalan Udemy Profili](https://www.udemy.com/user/kasim-adalan-2/)
